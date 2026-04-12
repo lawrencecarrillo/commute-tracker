@@ -17,7 +17,9 @@
   .hero-title span { color: #fccc0a; }
   .hero-sub { font-size: 13px; color: #6b8caa; position: relative; margin-bottom: 1rem; }
   .line-pills { display: flex; gap: 6px; flex-wrap: wrap; position: relative; }
-  .line-pill { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; color: #fff; flex-shrink: 0; }
+  .mode-pill { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 14px; border-radius: 12px; flex-shrink: 0; }
+  .mode-pill svg { width: 28px; height: 28px; }
+  .mode-pill span { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #6b8caa; }
 
   .container { max-width: 600px; margin: 0 auto; padding: 1.25rem; }
 
@@ -33,13 +35,13 @@
 
   .transport-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .transport-btn { padding: 16px 8px; border: 1px solid #1e3448; border-radius: 14px; background: #1a2e40; color: #4a7a9b; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all .15s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 80px; justify-content: center; }
-  .transport-btn .t-icon { font-size: 28px; line-height: 1; }
-  .transport-btn.selected { color: #fff; font-weight: 900; border-color: transparent; }
-  .transport-btn.sel-citibike { background: #0039A6; }
-  .transport-btn.sel-subway { background: #EE352E; }
-  .transport-btn.sel-walk { background: #FF6319; }
-  .transport-btn.sel-bus { background: #B933AD; }
-  .transport-btn.sel-car { background: #6D6E71; }
+  .transport-btn .t-icon { width: 36px; height: 36px; }
+  .transport-btn.selected { font-weight: 900; border-width: 2px; }
+  .transport-btn.sel-citibike { background: #0d2d52; border-color: #0039A6; color: #5b9fd4; }
+  .transport-btn.sel-subway { background: #3a0f0e; border-color: #EE352E; color: #f08080; }
+  .transport-btn.sel-walk { background: #3a1e0a; border-color: #FF6319; color: #f0a070; }
+  .transport-btn.sel-bus { background: #2a0d2a; border-color: #B933AD; color: #d480d0; }
+  .transport-btn.sel-car { background: #1e2428; border-color: #6D6E71; color: #a0a8b0; }
 
   .rating-group { display: flex; gap: 8px; }
   .rating-btn { flex: 1; padding: 16px 4px; font-size: 18px; font-weight: 900; cursor: pointer; border: 1px solid #1e3448; border-radius: 12px; background: #1a2e40; color: #4a7a9b; transition: all .15s; font-family: inherit; min-height: 56px; }
@@ -89,34 +91,59 @@
 
 <div class="hero">
   <div class="hero-lines">
-    <div class="hero-line" style="left:8%;background:#EE352E;"></div>
-    <div class="hero-line" style="left:20%;background:#FF6319;"></div>
-    <div class="hero-line" style="left:32%;background:#fccc0a;"></div>
-    <div class="hero-line" style="left:44%;background:#00933C;"></div>
-    <div class="hero-line" style="left:56%;background:#0039A6;"></div>
-    <div class="hero-line" style="left:68%;background:#B933AD;"></div>
-    <div class="hero-line" style="left:80%;background:#EE352E;"></div>
-    <div class="hero-line" style="left:92%;background:#00933C;"></div>
+    <div class="hero-line" style="left:10%;background:#0039A6;"></div>
+    <div class="hero-line" style="left:30%;background:#EE352E;"></div>
+    <div class="hero-line" style="left:50%;background:#FF6319;"></div>
+    <div class="hero-line" style="left:70%;background:#B933AD;"></div>
+    <div class="hero-line" style="left:90%;background:#6D6E71;"></div>
   </div>
   <div style="max-width:600px;margin:0 auto;">
     <div class="hero-title">NYC Commute &amp;<br><span>Energy Tracker</span></div>
     <p class="hero-sub">Track your commute to Pursuit and see how it affects your learning.</p>
     <div class="line-pills">
-      <div class="line-pill" style="background:#EE352E;">1</div>
-      <div class="line-pill" style="background:#EE352E;">2</div>
-      <div class="line-pill" style="background:#EE352E;">3</div>
-      <div class="line-pill" style="background:#FF6319;">B</div>
-      <div class="line-pill" style="background:#FF6319;">D</div>
-      <div class="line-pill" style="background:#fccc0a;color:#000;">N</div>
-      <div class="line-pill" style="background:#fccc0a;color:#000;">Q</div>
-      <div class="line-pill" style="background:#00933C;">4</div>
-      <div class="line-pill" style="background:#00933C;">5</div>
-      <div class="line-pill" style="background:#00933C;">6</div>
-      <div class="line-pill" style="background:#0039A6;">A</div>
-      <div class="line-pill" style="background:#0039A6;">C</div>
-      <div class="line-pill" style="background:#0039A6;">E</div>
-      <div class="line-pill" style="background:#B933AD;">7</div>
-      <div class="line-pill" style="background:#6D6E71;">L</div>
+      <div class="mode-pill" style="background:#0d2a3a;border:1px solid #1D9E75;">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#5DCAA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="22" r="6"/><circle cx="24" cy="22" r="6"/>
+          <path d="M8 22L14 10h6"/><path d="M14 10l6 12"/><path d="M20 10h4"/>
+          <circle cx="20" cy="9" r="1.5" fill="#5DCAA5" stroke="none"/>
+        </svg>
+        <span>Bike</span>
+      </div>
+      <div class="mode-pill" style="background:#0d1f3a;border:1px solid #378ADD;">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#85B7EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="4" width="20" height="20" rx="4"/>
+          <path d="M6 14h20"/><circle cx="11" cy="19" r="2"/><circle cx="21" cy="19" r="2"/>
+          <path d="M10 28l3-4"/><path d="M22 28l-3-4"/>
+          <path d="M11 9h10"/>
+        </svg>
+        <span>Subway</span>
+      </div>
+      <div class="mode-pill" style="background:#1a1a3a;border:1px solid #7F77DD;">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#AFA9EC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="16" cy="5" r="2.5"/>
+          <path d="M16 8v8"/><path d="M10 28l4-8 4 4 2-6"/>
+          <path d="M12 16l-3 5"/><path d="M20 16l3 4"/>
+        </svg>
+        <span>Walk</span>
+      </div>
+      <div class="mode-pill" style="background:#0a2030;border:1px solid #185FA5;">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#85B7EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="6" width="24" height="18" rx="3"/>
+          <path d="M4 12h24"/><path d="M4 18h24"/>
+          <circle cx="10" cy="24" r="2.5"/><circle cx="22" cy="24" r="2.5"/>
+          <path d="M10 6V4"/><path d="M22 6V4"/>
+        </svg>
+        <span>Bus</span>
+      </div>
+      <div class="mode-pill" style="background:#120d2a;border:1px solid #534AB7;">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#AFA9EC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 18h24v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z"/>
+          <path d="M4 18l3-8h18l3 8"/>
+          <circle cx="9" cy="22" r="2.5"/><circle cx="23" cy="22" r="2.5"/>
+          <path d="M9 14h14"/>
+        </svg>
+        <span>Car</span>
+      </div>
     </div>
   </div>
 </div>
@@ -140,19 +167,47 @@
       <label>How did you get to Pursuit today?</label>
       <div class="transport-grid">
         <button class="transport-btn" id="btn-citibike" onclick="selectMode('Citibike/Bike','citibike')">
-          <span class="t-icon">🚲</span>Citibike/Bike
+          <svg class="t-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="22" r="6"/><circle cx="24" cy="22" r="6"/>
+            <path d="M8 22L14 10h6"/><path d="M14 10l6 12"/><path d="M20 10h4"/><circle cx="20" cy="9" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+          Citibike/Bike
         </button>
         <button class="transport-btn" id="btn-subway" onclick="selectMode('Subway','subway')">
-          <span class="t-icon">🚇</span>Subway
+          <svg class="t-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="20" height="20" rx="4"/>
+            <path d="M6 14h20"/><circle cx="11" cy="19" r="2"/><circle cx="21" cy="19" r="2"/>
+            <path d="M10 28l3-4"/><path d="M22 28l-3-4"/>
+            <path d="M11 9h10"/>
+          </svg>
+          Subway
         </button>
         <button class="transport-btn" id="btn-walk" onclick="selectMode('Walk','walk')">
-          <span class="t-icon">👟</span>Walk
+          <svg class="t-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="5" r="2.5"/><path d="M16 8v8"/><path d="M10 28l4-8 4 4 2-6"/>
+            <path d="M12 16l-3 5"/><path d="M20 16l3 4"/>
+            <path d="M9 21l4 2"/><path d="M20 20l3 2"/>
+          </svg>
+          Walk
         </button>
         <button class="transport-btn" id="btn-bus" onclick="selectMode('Bus','bus')">
-          <span class="t-icon">🚌</span>Bus
+          <svg class="t-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="6" width="24" height="18" rx="3"/>
+            <path d="M4 12h24"/><path d="M4 18h24"/>
+            <circle cx="10" cy="24" r="2.5"/><circle cx="22" cy="24" r="2.5"/>
+            <path d="M10 6V4"/><path d="M22 6V4"/>
+            <path d="M10 12v6"/><path d="M16 12v6"/><path d="M22 12v6"/>
+          </svg>
+          Bus
         </button>
         <button class="transport-btn" id="btn-car" onclick="selectMode('Car/Rideshare','car')" style="grid-column: span 2;">
-          <span class="t-icon">🚗</span>Car / Rideshare
+          <svg class="t-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 18h24v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z"/>
+            <path d="M4 18l3-8h18l3 8"/>
+            <circle cx="9" cy="22" r="2.5"/><circle cx="23" cy="22" r="2.5"/>
+            <path d="M9 14h14"/><path d="M4 18h2"/><path d="M26 18h2"/>
+          </svg>
+          Car / Rideshare
         </button>
       </div>
     </div>
@@ -269,11 +324,11 @@ const modeColors = {
 };
 
 const modeIcons = {
-  'Citibike/Bike': '🚲',
-  'Subway': '🚇',
-  'Walk': '👟',
-  'Bus': '🚌',
-  'Car/Rideshare': '🚗'
+  'Citibike/Bike': '&#x1F6B2;',
+  'Subway': '&#x24C2;',
+  'Walk': '&#x1F6B6;',
+  'Bus': '&#x1F68C;',
+  'Car/Rideshare': '&#x1F697;'
 };
 
 function selectMode(mode, key) {
@@ -388,6 +443,59 @@ function render() {
       return '<div class="log-entry">' +
         '<div class="log-entry-top">' +
           '<span class="log-entry-name">' + e.name + '</span>' +
+          '<span class="log-entry-date">' + e.date + '</span>' +
+        '</div>' +
+        '<div class="log-entry-bottom">' +
+          '<span class="mode-badge" style="background:' + color + ';">' + icon + ' ' + e.mode + '</span>' +
+          '<span class="log-entry-duration">' + e.duration + ' min</span>' +
+          '<div class="log-entry-ratings">' +
+            '<span>Energy ' + e.energy + '/5</span>' +
+            '<span>Productivity ' + e.productivity + '/5</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  const labels = entries.map((e,i) => e.name + ' #' + (i+1));
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { label: 'Energy', data: entries.map(e => Number(e.energy)), borderColor: '#00933C', backgroundColor: 'rgba(0,147,60,0.1)', tension: 0.3, pointRadius: 5, pointBackgroundColor: '#00933C', fill: true, borderWidth: 2 },
+      { label: 'Productivity', data: entries.map(e => Number(e.productivity)), borderColor: '#0039A6', backgroundColor: 'rgba(0,57,166,0.08)', tension: 0.3, pointRadius: 5, pointBackgroundColor: '#0039A6', borderDash: [5,3], fill: true, borderWidth: 2 }
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#4a7a9b', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: '#1e3448' } },
+        x: { ticks: { color: '#4a7a9b', font: { size: 10 }, autoSkip: true, maxRotation: 30, maxTicksLimit: 6 }, grid: { display: false }, border: { color: '#1e3448' } }
+      }
+    }
+  });
+
+  const modes = [...new Set(entries.map(e => e.mode))];
+  const barColors = modes.map(m => modeColors[m] || '#6D6E71');
+  if (modeChart) modeChart.destroy();
+  modeChart = new Chart(document.getElementById('modeChart'), {
+    type: 'bar',
+    data: { labels: modes, datasets: [{ label: 'Avg energy', data: modes.map(m => parseFloat(avg(entries.filter(e => e.mode===m).map(e => Number(e.energy))).toFixed(1))), backgroundColor: barColors, borderRadius: 8, borderSkipped: false }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#4a7a9b', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: '#1e3448' } },
+        x: { ticks: { color: '#c8daea', font: { size: 12, weight: '700' } }, grid: { display: false }, border: { color: '#1e3448' } }
+      }
+    }
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>          '<span class="log-entry-name">' + e.name + '</span>' +
           '<span class="log-entry-date">' + e.date + '</span>' +
         '</div>' +
         '<div class="log-entry-bottom">' +

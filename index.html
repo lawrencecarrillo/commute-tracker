@@ -11,14 +11,14 @@
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #0a0a0a;
+    background: #0d1b2a;
     color: #f0f0f0;
     min-height: 100vh;
     padding: 0;
   }
 
   .hero {
-    background: #0a0a0a;
+    background: #0d1b2a;
     border-bottom: 4px solid #fccc0a;
     padding: 2rem 1.5rem 1.5rem;
     position: relative;
@@ -55,7 +55,7 @@
 
   .hero-sub {
     font-size: 13px;
-    color: #888;
+    color: #6b8caa;
     position: relative;
     margin-bottom: 1.25rem;
   }
@@ -92,8 +92,8 @@
   }
 
   .card {
-    background: #141414;
-    border: 1px solid #2a2a2a;
+    background: #162232;
+    border: 1px solid #1e3448;
     border-radius: 16px;
     padding: 1.25rem;
     margin-bottom: 1.25rem;
@@ -101,21 +101,21 @@
 
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #888; }
+  .form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #6b8caa; }
 
   input, select {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #2a2a2a;
+    border: 1px solid #1e3448;
     border-radius: 10px;
     font-size: 14px;
     font-family: inherit;
-    background: #1e1e1e;
+    background: #1a2e40;
     color: #f0f0f0;
     transition: border-color .15s;
   }
   input:focus, select:focus { outline: none; border-color: #fccc0a; }
-  select option { background: #1e1e1e; }
+  select option { background: #1a2e40; }
 
   .transport-grid {
     display: grid;
@@ -125,10 +125,10 @@
 
   .transport-btn {
     padding: 10px 6px;
-    border: 1px solid #2a2a2a;
+    border: 1px solid #1e3448;
     border-radius: 10px;
-    background: #1e1e1e;
-    color: #888;
+    background: #1a2e40;
+    color: #6b8caa;
     font-size: 12px;
     font-weight: 700;
     font-family: inherit;
@@ -142,7 +142,7 @@
   }
 
   .transport-btn .t-icon { font-size: 20px; }
-  .transport-btn:hover { border-color: #444; color: #f0f0f0; }
+  .transport-btn:hover { border-color: #1e3448; color: #f0f0f0; }
   .transport-btn.selected { border-color: transparent; color: #fff; font-weight: 900; }
   .transport-btn.sel-citibike { background: #0039A6; border-color: #0039A6; }
   .transport-btn.sel-subway { background: #EE352E; border-color: #EE352E; }
@@ -154,10 +154,10 @@
   .rating-group { display: flex; gap: 6px; }
   .rating-btn {
     flex: 1; padding: 10px 4px; font-size: 14px; font-weight: 700;
-    cursor: pointer; border: 1px solid #2a2a2a; border-radius: 10px;
-    background: #1e1e1e; color: #888; transition: all .15s; font-family: inherit;
+    cursor: pointer; border: 1px solid #1e3448; border-radius: 10px;
+    background: #1a2e40; color: #6b8caa; transition: all .15s; font-family: inherit;
   }
-  .rating-btn:hover { border-color: #444; color: #f0f0f0; }
+  .rating-btn:hover { border-color: #1e3448; color: #f0f0f0; }
   .rating-btn.selected { background: #fccc0a; color: #0a0a0a; border-color: #fccc0a; }
 
   .log-btn {
@@ -173,8 +173,8 @@
 
   .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
   .metric {
-    background: #141414;
-    border: 1px solid #2a2a2a;
+    background: #162232;
+    border: 1px solid #1e3448;
     border-radius: 12px;
     padding: 1rem;
     position: relative;
@@ -186,12 +186,12 @@
     height: 3px;
     border-radius: 12px 12px 0 0;
   }
-  .metric-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #666; margin-bottom: 6px; }
+  .metric-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #4a7a9b; margin-bottom: 6px; }
   .metric-value { font-size: 26px; font-weight: 900; color: #fff; }
-  .metric-sub { font-size: 10px; color: #555; margin-top: 2px; }
+  .metric-sub { font-size: 10px; color: #4a7a9b; margin-top: 2px; }
 
   .insight-card {
-    background: #141414;
+    background: #162232;
     border: 1px solid #fccc0a;
     border-left: 4px solid #fccc0a;
     border-radius: 16px;
@@ -203,14 +203,14 @@
   .insight-text { font-size: 14px; line-height: 1.6; color: #f0f0f0; }
 
   .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #666; }
+  .status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #4a7a9b; }
   .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; transition: background .3s; }
 
   .log-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-  .log-table th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #555; padding: 6px 8px; border-bottom: 1px solid #2a2a2a; }
-  .log-table td { padding: 10px 8px; border-bottom: 1px solid #1e1e1e; color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .log-table th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #4a7a9b; padding: 6px 8px; border-bottom: 1px solid #1e3448; }
+  .log-table td { padding: 10px 8px; border-bottom: 1px solid #132030; color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .log-table tr:last-child td { border-bottom: none; }
-  .log-table tr:hover td { background: #1a1a1a; }
+  .log-table tr:hover td { background: #132030; }
 
   .mode-badge {
     display: inline-flex; align-items: center; gap: 4px;
@@ -218,12 +218,12 @@
     border-radius: 99px; color: #fff;
   }
 
-  .empty { color: #555; text-align: center; padding: 2rem; font-size: 13px; }
+  .empty { color: #4a7a9b; text-align: center; padding: 2rem; font-size: 13px; }
 
   .refresh-btn {
-    padding: 6px 14px; background: transparent; border: 1px solid #2a2a2a;
+    padding: 6px 14px; background: transparent; border: 1px solid #1e3448;
     border-radius: 8px; font-size: 12px; font-family: inherit; cursor: pointer;
-    color: #888; transition: all .15s; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: #6b8caa; transition: all .15s; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
   }
   .refresh-btn:hover { border-color: #fccc0a; color: #fccc0a; }
 
@@ -508,7 +508,7 @@ async function logEntry() {
 async function loadData() {
   const dot = document.getElementById('status-dot');
   const statusText = document.getElementById('status-text');
-  dot.style.background = '#444'; statusText.textContent = 'Connecting...';
+  dot.style.background = '#1e3448'; statusText.textContent = 'Connecting...';
   try {
     const data = await jsonp(API);
     if (data && data.status === 'ok') {
@@ -574,8 +574,8 @@ function render() {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#555', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' }, border: { color: '#2a2a2a' } },
-        x: { ticks: { color: '#555', font: { size: 11 }, autoSkip: true, maxRotation: 30, maxTicksLimit: 10 }, grid: { display: false }, border: { color: '#2a2a2a' } }
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#555', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: '#1e3448' } },
+        x: { ticks: { color: '#555', font: { size: 11 }, autoSkip: true, maxRotation: 30, maxTicksLimit: 10 }, grid: { display: false }, border: { color: '#1e3448' } }
       }
     }
   });
@@ -591,8 +591,8 @@ function render() {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#555', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' }, border: { color: '#2a2a2a' } },
-        x: { ticks: { color: '#aaa', font: { size: 12, weight: '700' } }, grid: { display: false }, border: { color: '#2a2a2a' } }
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#555', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: '#1e3448' } },
+        x: { ticks: { color: '#aaa', font: { size: 12, weight: '700' } }, grid: { display: false }, border: { color: '#1e3448' } }
       }
     }
   });

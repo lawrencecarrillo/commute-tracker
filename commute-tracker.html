@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NYC Commute & Energy Tracker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #1a1a18; min-height: 100vh; padding: 2rem 1rem; }
+  .container { max-width: 800px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #73726c; margin-bottom: 1.5rem; }
+  .card { background: #fff; border: 0.5px solid rgba(0,0,0,0.12); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; }
+  .section-label { font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 12px; color: #73726c; }
+  input, select { width: 100%; padding: 8px 10px; border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; color: #1a1a18; }
+  input:focus, select:focus { outline: 2px solid #378ADD; outline-offset: 1px; }
+  .rating-group { display: flex; gap: 6px; }
+  .rating-btn { flex: 1; padding: 8px 4px; font-size: 13px; cursor: pointer; border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px; background: #fff; color: #73726c; transition: all .15s; font-family: inherit; }
+  .rating-btn.selected { background: #E6F1FB; color: #0C447C; border-color: #378ADD; font-weight: 500; }
+  .rating-btn:hover { background: #f5f5f3; }
+  button.primary { width: 100%; padding: 10px; background: #1a1a18; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer; margin-top: 4px; transition: opacity .15s; }
+  button.primary:hover { opacity: 0.85; }
+  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary { padding: 4px 12px; background: transparent; border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px; font-size: 12px; font-family: inherit; cursor: pointer; color: #73726c; }
+  button.secondary:hover { background: #f5f5f3; }
+  .form-msg { font-size: 12px; margin-top: 8px; min-height: 16px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .metric { background: #f5f5f3; border-radius: 8px; padding: 1rem; }
+  .metric-label { font-size: 12px; color: #73726c; margin-bottom: 4px; }
+  .metric-value { font-size: 22px; font-weight: 500; }
+  .metric-sub { font-size: 11px; color: #888780; margin-top: 4px; }
+  .insight-card { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: none; }
+  .insight-label { font-size: 11px; color: #185FA5; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .insight-text { font-size: 14px; line-height: 1.5; }
+  .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #73726c; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #888780; }
+  .log-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+  .log-table th { text-align: left; font-size: 11px; color: #73726c; font-weight: 500; padding: 6px 8px; border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+  .log-table td { padding: 8px; border-bottom: 0.5px solid rgba(0,0,0,0.06); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .log-table tr:last-child td { border-bottom: none; }
+  .mode-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; background: #f5f5f3; color: #73726c; }
+  .legend { display: flex; gap: 16px; margin-top: 12px; font-size: 12px; color: #73726c; }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .legend-line { width: 10px; height: 3px; border-radius: 2px; display: inline-block; }
+  .empty { color: #888780; text-align: center; padding: 1.5rem; }
+  @media (max-width: 500px) {
+    .form-row { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>NYC Commute & Energy Tracker</h1>
+  <p class="subtitle">Log your daily commute and see how it affects your learning performance.</p>
+
+  <div class="card">
+    <p class="section-label">Log today's commute</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Your first name</label>
+        <input type="text" id="username" placeholder="e.g. Lawrence">
+      </div>
+      <div class="form-group">
+        <label>Duration (minutes)</label>
+        <input type="number" id="duration" min="1" max="120" placeholder="e.g. 15">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Transport mode</label>
+        <select id="mode">
+          <option value="">Select...</option>
+          <option value="Citibike">Citibike</option>
+          <option value="Subway">Subway</option>
+          <option value="Subway + walk">Subway + walk</option>
+          <option value="Walk">Walk</option>
+          <option value="Bus">Bus</option>
+          <option value="Car">Car</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Arrival energy (1 = drained, 5 = energized)</label>
+        <div class="rating-group" id="energy-btns">
+          <button class="rating-btn" onclick="selectRating('energy',1)">1</button>
+          <button class="rating-btn" onclick="selectRating('energy',2)">2</button>
+          <button class="rating-btn" onclick="selectRating('energy',3)">3</button>
+          <button class="rating-btn" onclick="selectRating('energy',4)">4</button>
+          <button class="rating-btn" onclick="selectRating('energy',5)">5</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Session productivity (1 = unfocused, 5 = locked in)</label>
+        <div class="rating-group" id="productivity-btns">
+          <button class="rating-btn" onclick="selectRating('productivity',1)">1</button>
+          <button class="rating-btn" onclick="selectRating('productivity',2)">2</button>
+          <button class="rating-btn" onclick="selectRating('productivity',3)">3</button>
+          <button class="rating-btn" onclick="selectRating('productivity',4)">4</button>
+          <button class="rating-btn" onclick="selectRating('productivity',5)">5</button>
+        </div>
+      </div>
+      <div class="form-group" style="justify-content:flex-end;">
+        <button class="primary" onclick="logEntry()" id="log-btn">Log commute</button>
+      </div>
+    </div>
+    <p class="form-msg" id="form-msg"></p>
+  </div>
+
+  <div class="status-row">
+    <p style="font-size:13px;font-weight:500;">Live cohort data</p>
+    <div class="status">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Connecting...</span>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric"><p class="metric-label">Total logs</p><p class="metric-value" id="m-count">—</p></div>
+    <div class="metric"><p class="metric-label">Avg commute</p><p class="metric-value" id="m-duration">—</p><p class="metric-sub">minutes</p></div>
+    <div class="metric"><p class="metric-label">Avg energy</p><p class="metric-value" id="m-energy">—</p><p class="metric-sub">out of 5</p></div>
+    <div class="metric"><p class="metric-label">Avg productivity</p><p class="metric-value" id="m-productivity">—</p><p class="metric-sub">out of 5</p></div>
+  </div>
+
+  <div class="insight-card" id="insight-card">
+    <p class="insight-label">Key insight</p>
+    <p class="insight-text" id="insight-text"></p>
+  </div>
+
+  <div class="card">
+    <p class="section-label">Energy vs productivity over time</p>
+    <div style="position:relative;width:100%;height:240px;">
+      <canvas id="trendChart" role="img" aria-label="Line chart showing arrival energy and productivity over time"></canvas>
+    </div>
+    <div class="legend">
+      <span><span class="legend-line" style="background:#1D9E75;"></span>Arrival energy</span>
+      <span><span class="legend-line" style="background:#534AB7;border-top:2px dashed #534AB7;height:0;margin-top:1px;"></span>Productivity</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="section-label">Avg energy by transport mode</p>
+    <div style="position:relative;width:100%;height:180px;">
+      <canvas id="modeChart" role="img" aria-label="Bar chart showing average energy by transport mode"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <p class="section-label" style="margin:0;">Log history</p>
+      <button class="secondary" onclick="loadData()">Refresh</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th style="width:15%;">Date</th>
+            <th style="width:15%;">Name</th>
+            <th style="width:22%;">Mode</th>
+            <th style="width:13%;">Min</th>
+            <th style="width:15%;">Energy</th>
+            <th style="width:20%;">Productivity</th>
+          </tr>
+        </thead>
+        <tbody id="log-body">
+          <tr><td colspan="6" class="empty">Connecting...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyKIuSyItMhJhgpuoOQDSAT4imfBqJKutUkR2nlZiPACsvFv0oCt8hGVyQzNcK04p5Qsw/exec';
+let entries = [];
+let selected = { energy: null, productivity: null };
+let trendChart, modeChart;
+
+function selectRating(type, val) {
+  selected[type] = val;
+  document.querySelectorAll('#' + type + '-btns .rating-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i + 1 === val);
+  });
+}
+
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+    const script = document.createElement('script');
+    const timer = setTimeout(() => { delete window[cb]; script.remove(); reject(new Error('Timeout')); }, 10000);
+    window[cb] = (data) => { clearTimeout(timer); delete window[cb]; script.remove(); resolve(data); };
+    script.onerror = () => { clearTimeout(timer); delete window[cb]; script.remove(); reject(new Error('Failed')); };
+    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb + '&t=' + Date.now();
+    document.head.appendChild(script);
+  });
+}
+
+async function logEntry() {
+  const name = document.getElementById('username').value.trim();
+  const duration = parseInt(document.getElementById('duration').value);
+  const mode = document.getElementById('mode').value;
+  const msg = document.getElementById('form-msg');
+  const btn = document.getElementById('log-btn');
+  if (!name || !duration || !mode || !selected.energy || !selected.productivity) {
+    msg.style.color = '#A32D2D'; msg.textContent = 'Please fill in all fields before logging.'; return;
+  }
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  try {
+    const params = new URLSearchParams({ action: 'post', name, duration, mode, energy: selected.energy, productivity: selected.productivity });
+    const result = await jsonp(API + '?' + params.toString());
+    if (result && result.status === 'ok') {
+      msg.style.color = '#0F6E56'; msg.textContent = 'Logged! Refreshing data...';
+      document.getElementById('username').value = '';
+      document.getElementById('duration').value = '';
+      document.getElementById('mode').value = '';
+      selected = { energy: null, productivity: null };
+      document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+      setTimeout(() => { msg.textContent = ''; loadData(); }, 1500);
+    } else { throw new Error('Save failed'); }
+  } catch(err) {
+    msg.style.color = '#A32D2D'; msg.textContent = 'Could not save — check your connection and try again.';
+  }
+  btn.textContent = 'Log commute'; btn.disabled = false;
+}
+
+async function loadData() {
+  const dot = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
+  dot.style.background = '#888780'; statusText.textContent = 'Connecting...';
+  try {
+    const data = await jsonp(API);
+    if (data && data.status === 'ok') {
+      entries = (data.entries || []).filter(e => e.name && e.duration);
+      dot.style.background = '#1D9E75';
+      statusText.textContent = 'Connected — ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
+      render();
+    } else { throw new Error('Bad response'); }
+  } catch(err) {
+    dot.style.background = '#E24B4A'; statusText.textContent = 'Connection error';
+    document.getElementById('log-body').innerHTML = '<tr><td colspan="6" class="empty">Could not reach Google Sheet. Make sure the script is deployed with access set to Anyone.</td></tr>';
+    ['m-count','m-duration','m-energy','m-productivity'].forEach(id => document.getElementById(id).textContent = '—');
+  }
+}
+
+function avg(arr) { return arr.length ? arr.reduce((a,b) => a+b, 0) / arr.length : 0; }
+
+function render() {
+  const count = entries.length;
+  document.getElementById('m-count').textContent = count || '0';
+  document.getElementById('m-duration').textContent = count ? Math.round(avg(entries.map(e => Number(e.duration)))) : '—';
+  document.getElementById('m-energy').textContent = count ? avg(entries.map(e => Number(e.energy))).toFixed(1) : '—';
+  document.getElementById('m-productivity').textContent = count ? avg(entries.map(e => Number(e.productivity))).toFixed(1) : '—';
+
+  const card = document.getElementById('insight-card');
+  if (count >= 3) {
+    const short = entries.filter(e => Number(e.duration) <= 20);
+    const long = entries.filter(e => Number(e.duration) > 20);
+    if (short.length && long.length) {
+      const sE = avg(short.map(e => Number(e.energy))).toFixed(1);
+      const lE = avg(long.map(e => Number(e.energy))).toFixed(1);
+      const sP = avg(short.map(e => Number(e.productivity))).toFixed(1);
+      const lP = avg(long.map(e => Number(e.productivity))).toFixed(1);
+      const better = parseFloat(sE) >= parseFloat(lE) ? 'shorter' : 'longer';
+      document.getElementById('insight-text').textContent = `Commutes under 20 min average ${sE}/5 energy and ${sP}/5 productivity. Commutes over 20 min average ${lE}/5 energy and ${lP}/5 productivity. ${better.charAt(0).toUpperCase()+better.slice(1)} commutes are leaving learners more energized.`;
+      card.style.display = 'block';
+    } else { card.style.display = 'none'; }
+  } else { card.style.display = 'none'; }
+
+  const body = document.getElementById('log-body');
+  body.innerHTML = count ? [...entries].reverse().map(e => `
+    <tr>
+      <td>${e.date}</td><td>${e.name}</td>
+      <td><span class="mode-badge">${e.mode}</span></td>
+      <td>${e.duration}m</td><td>${e.energy}/5</td><td>${e.productivity}/5</td>
+    </tr>`).join('') : '<tr><td colspan="6" class="empty">No entries yet — be the first to log your commute.</td></tr>';
+
+  const labels = entries.map((e,i) => e.name + ' #' + (i+1));
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { label: 'Arrival energy', data: entries.map(e => Number(e.energy)), borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#1D9E75', fill: true },
+      { label: 'Productivity', data: entries.map(e => Number(e.productivity)), borderColor: '#534AB7', backgroundColor: 'rgba(83,74,183,0.06)', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#534AB7', borderDash: [4,3], fill: true }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#888780', font: { size: 11 } }, grid: { color: 'rgba(136,135,128,0.15)' } },
+        x: { ticks: { color: '#888780', font: { size: 11 }, autoSkip: true, maxRotation: 30, maxTicksLimit: 10 }, grid: { display: false } }
+      }
+    }
+  });
+
+  const modes = [...new Set(entries.map(e => e.mode))];
+  const colors = ['#1D9E75','#534AB7','#D85A30','#BA7517','#D4537E'];
+  if (modeChart) modeChart.destroy();
+  modeChart = new Chart(document.getElementById('modeChart'), {
+    type: 'bar',
+    data: { labels: modes, datasets: [{ label: 'Avg energy', data: modes.map(m => parseFloat(avg(entries.filter(e => e.mode===m).map(e => Number(e.energy))).toFixed(1))), backgroundColor: modes.map((_,i) => colors[i%colors.length]), borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#888780', font: { size: 11 } }, grid: { color: 'rgba(136,135,128,0.15)' } },
+        x: { ticks: { color: '#888780', font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>

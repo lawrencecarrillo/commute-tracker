@@ -292,14 +292,11 @@
     <div class="form-group" style="margin-bottom:12px;">
       <label>How did you get here?</label>
       <div class="transport-grid">
-        <button class="transport-btn" id="btn-citibike" onclick="selectMode('Citibike','citibike')">
-          <span class="t-icon">🚲</span>Citibike
+        <button class="transport-btn" id="btn-citibike" onclick="selectMode('Citibike/Bike','citibike')">
+          <span class="t-icon">🚲</span>Citibike/Bike
         </button>
         <button class="transport-btn" id="btn-subway" onclick="selectMode('Subway','subway')">
           <span class="t-icon">🚇</span>Subway
-        </button>
-        <button class="transport-btn" id="btn-subway-walk" onclick="selectMode('Subway + walk','subway-walk')">
-          <span class="t-icon">🚶</span>Subway+Walk
         </button>
         <button class="transport-btn" id="btn-walk" onclick="selectMode('Walk','walk')">
           <span class="t-icon">👟</span>Walk
@@ -307,7 +304,7 @@
         <button class="transport-btn" id="btn-bus" onclick="selectMode('Bus','bus')">
           <span class="t-icon">🚌</span>Bus
         </button>
-        <button class="transport-btn" id="btn-car" onclick="selectMode('Car','car')">
+        <button class="transport-btn" id="btn-car" onclick="selectMode('Car/Rideshare','car')">
           <span class="t-icon">🚗</span>Car/Rideshare
         </button>
       </div>
@@ -432,21 +429,19 @@ let selected = { energy: null, productivity: null };
 let trendChart, modeChart;
 
 const modeColors = {
-  'Citibike': '#0039A6',
+  'Citibike/Bike': '#0039A6',
   'Subway': '#EE352E',
-  'Subway + walk': '#00933C',
   'Walk': '#FF6319',
   'Bus': '#B933AD',
-  'Car': '#6D6E71'
+  'Car/Rideshare': '#6D6E71'
 };
 
 const modeIcons = {
-  'Citibike': '🚲',
+  'Citibike/Bike': '🚲',
   'Subway': '🚇',
-  'Subway + walk': '🚶',
   'Walk': '👟',
   'Bus': '🚌',
-  'Car': '🚗'
+  'Car/Rideshare': '🚗'
 };
 
 function selectMode(mode, key) {

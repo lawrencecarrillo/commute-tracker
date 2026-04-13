@@ -16,14 +16,14 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .hero-title span { color: #fccc0a; }
 .hero-sub { font-size: 13px; color: #6b8caa; position: relative; margin-bottom: 1rem; }
 .mode-pills { display: flex; gap: 8px; flex-wrap: wrap; position: relative; }
-.mode-pill { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 14px; border-radius: 12px; flex-shrink: 0; }
+.mode-pill { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 8px 10px; flex-shrink: 0; }
 .mode-pill svg { width: 28px; height: 28px; }
 .mode-pill span { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #6b8caa; }
 .container { max-width: 600px; margin: 0 auto; padding: 1.25rem; }
 .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #fccc0a; margin-bottom: 12px; }
 .card { background: #162232; border: 1px solid #1e3448; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem; }
 .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #4a7a9b; }
+.form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #fccc0a; }
 input { width: 100%; padding: 14px 16px; border: 1px solid #1e3448; border-radius: 12px; font-size: 16px; font-family: inherit; background: #1a2e40; color: #f0f0f0; transition: border-color .15s; }
 input:focus { outline: none; border-color: #fccc0a; }
 .transport-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -81,7 +81,7 @@ input:focus { outline: none; border-color: #fccc0a; }
     <div class="hero-title">NYC Commute &amp;<br><span>Energy Tracker</span></div>
     <p class="hero-sub">Track your commute to Pursuit and see how it affects your learning.</p>
     <div class="mode-pills" style="justify-content:center;">
-      <div class="mode-pill" style="background:#0d2a3a;border:1px solid #1D9E75;">
+      <div class="mode-pill" style="background:transparent;">
         <svg viewBox="0 0 32 32" fill="none" stroke="#5DCAA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="8" cy="22" r="6"/><circle cx="24" cy="22" r="6"/>
           <path d="M8 22L14 10h6"/><path d="M14 10l6 12"/><path d="M20 10h4"/>
@@ -89,7 +89,7 @@ input:focus { outline: none; border-color: #fccc0a; }
         </svg>
         <span>Bike</span>
       </div>
-      <div class="mode-pill" style="background:#0d1f3a;border:1px solid #378ADD;">
+      <div class="mode-pill" style="background:transparent;">
         <svg viewBox="0 0 32 32" fill="none" stroke="#85B7EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="6" y="4" width="20" height="20" rx="4"/>
           <path d="M6 14h20"/><circle cx="11" cy="19" r="2"/><circle cx="21" cy="19" r="2"/>
@@ -98,7 +98,7 @@ input:focus { outline: none; border-color: #fccc0a; }
         </svg>
         <span>Subway</span>
       </div>
-      <div class="mode-pill" style="background:#1a1a3a;border:1px solid #7F77DD;">
+      <div class="mode-pill" style="background:transparent;">
         <svg viewBox="0 0 32 32" fill="none" stroke="#AFA9EC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="16" cy="5" r="2.5"/>
           <path d="M16 8v8"/><path d="M10 28l4-8 4 4 2-6"/>
@@ -106,7 +106,7 @@ input:focus { outline: none; border-color: #fccc0a; }
         </svg>
         <span>Walk</span>
       </div>
-      <div class="mode-pill" style="background:#0a2030;border:1px solid #185FA5;">
+      <div class="mode-pill" style="background:transparent;">
         <svg viewBox="0 0 32 32" fill="none" stroke="#85B7EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="4" y="6" width="24" height="18" rx="3"/>
           <path d="M4 12h24"/><path d="M4 18h24"/>
@@ -115,7 +115,7 @@ input:focus { outline: none; border-color: #fccc0a; }
         </svg>
         <span>Bus</span>
       </div>
-      <div class="mode-pill" style="background:#120d2a;border:1px solid #534AB7;">
+      <div class="mode-pill" style="background:transparent;">
         <svg viewBox="0 0 32 32" fill="none" stroke="#AFA9EC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 18h24v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z"/>
           <path d="M4 18l3-8h18l3 8"/>

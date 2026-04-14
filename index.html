@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NYC Commute & Energy Tracker</title>
+<title>ArriveReady</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
@@ -102,8 +102,8 @@ input:focus { outline: none; border-color: #fccc0a; }
     <div class="hero-line" style="left:90%;background:#534AB7;"></div>
   </div>
   <div style="max-width:600px;margin:0 auto;padding:0 1.25rem;text-align:center;">
-    <div class="hero-title">NYC Commute &amp;<br><span>Energy Tracker</span></div>
-    <p class="hero-sub">Track your commute to Pursuit and see how it affects your learning.</p>
+    <div class="hero-title">Arrive<span>Ready</span></div>
+    <p class="hero-sub">Does your commute determine how ready you are to learn? Find out.</p>
     <div class="mode-pills" style="justify-content:center;">
       <div class="mode-pill" style="background:transparent;">
         <svg viewBox="0 0 32 32" fill="none" stroke="#5DCAA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -155,7 +155,7 @@ input:focus { outline: none; border-color: #fccc0a; }
 <div class="container">
 
   <div class="card">
-    <p class="section-label">Log your commute to Pursuit today</p>
+    <p class="section-label">Log your commute to Pursuit</p>
 
     <div class="form-group">
       <label>Your first name</label>
@@ -243,7 +243,7 @@ input:focus { outline: none; border-color: #fccc0a; }
   </div>
 
   <div class="status-row">
-    <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#4a7a9b;">Live cohort data</p>
+    <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#4a7a9b;">ArriveReady — live cohort data</p>
     <div class="status">
       <span class="status-dot" id="status-dot"></span>
       <span id="status-text">Connecting...</span>
@@ -633,7 +633,7 @@ async function sendAI() {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
       </svg>
-      Commute AI Coach
+      ArriveReady AI Coach
     </div>
     <button class="ai-close" onclick="closeAI()">×</button>
   </div>
@@ -645,7 +645,7 @@ async function sendAI() {
     <button class="ai-suggestion" onclick="askSuggestion(this)">What patterns do you see in my data?</button>
   </div>
   <div class="ai-input-row">
-    <input class="ai-input" id="ai-input" placeholder="Ask about your commute data..." onkeydown="if(event.key==='Enter')sendAI()">
+    <input class="ai-input" id="ai-input" placeholder="Ask ArriveReady anything..." onkeydown="if(event.key==='Enter')sendAI()">
     <button class="ai-send" id="ai-send" onclick="sendAI()">Send</button>
   </div>
 </div>

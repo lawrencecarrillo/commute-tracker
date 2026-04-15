@@ -592,7 +592,6 @@ function render() {
   });
 }
 
-loadData();
 
 
 let aiHistory = [];
@@ -704,7 +703,7 @@ async function sendAI() {
   }
   sendBtn.disabled = false;
 }
-
+loadData();
 </script>
 
 <div class="ai-overlay" id="ai-overlay" onclick="closeAI()"></div>

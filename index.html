@@ -431,7 +431,8 @@ async function loadData() {
         mode: e.mode === 'Citibike' ? 'Citibike/Bike' : e.mode === 'Car' ? 'Car/Rideshare' : e.mode
       }));
       dot.style.background = '#1D9E75';
-      statusText.textContent = 'Live — ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');;
+      statusText.textContent = 'Live — ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
+      render();
       return true;
     }
     return false;
@@ -589,8 +590,10 @@ function render() {
       }
     }
   });
+}
 
 loadData();
+
 
 let aiHistory = [];
 let userName = '';

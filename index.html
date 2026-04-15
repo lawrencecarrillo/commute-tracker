@@ -409,7 +409,7 @@ async function loadData() {
     if (data && data.status === 'ok') {
       entries = (data.entries || []).filter(e => e.name && e.duration).map(e => ({
         ...e,
-        mode: e.mode === 'Citibike' ? 'Citibike/Bike' : e.mode
+        mode: e.mode === 'Citibike' ? 'Citibike/Bike' : e.mode === 'Car' ? 'Car/Rideshare' : e.mode
       }));
       dot.style.background = '#1D9E75';
       statusText.textContent = 'Live — ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');

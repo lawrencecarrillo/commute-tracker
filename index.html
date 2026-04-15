@@ -363,13 +363,24 @@ function selectRating(type, val) {
 
 function jsonp(url) {
   return new Promise((resolve, reject) => {
-    const cb = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
-    const script = document.createElement('script');
-    const timer = setTimeout(() => { delete window[cb]; script.remove(); reject(new Error('Timeout')); }, 10000);
-    window[cb] = (data) => { clearTimeout(timer); delete window[cb]; script.remove(); resolve(data); };
-    script.onerror = () => { clearTimeout(timer); delete window[cb]; script.remove(); reject(new Error('Failed')); };
-    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb + '&t=' + Date.now();
-    document.head.appendChild(script);
+    const cb = 'jsonpCb_' + Date.now();
+    var timer = setTimeout(function() {
+      delete window[cb];
+      reject(new Error('Timeout'));
+    }, 15000);
+    window[cb] = function(data) {
+      clearTimeout(timer);
+      delete window[cb];
+      resolve(data);
+    };
+    var s = document.createElement('script');
+    s.onerror = function() {
+      clearTimeout(timer);
+      delete window[cb];
+      reject(new Error('Script load failed'));
+    };
+    s.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb + '&_=' + Date.now();
+    document.head.appendChild(s);
   });
 }
 
@@ -412,8 +423,8 @@ async function loadData() {
   const dot = document.getElementById('status-dot');
   const statusText = document.getElementById('status-text');
   dot.style.background = '#1e3448'; statusText.textContent = 'Connecting...';
-  try {
-    const data = await jsonp(API);
+
+  function processData(data) {
     if (data && data.status === 'ok') {
       entries = (data.entries || []).filter(e => e.name && e.duration).map(e => ({
         ...e,
@@ -422,12 +433,27 @@ async function loadData() {
       dot.style.background = '#1D9E75';
       statusText.textContent = 'Live — ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
       render();
-    } else { throw new Error('Bad response'); }
-  } catch(err) {
-    dot.style.background = '#EE352E'; statusText.textContent = 'Connection error';
-    document.getElementById('log-body').innerHTML = '<p class="empty">Could not reach Google Sheet. Make sure script is deployed with access set to Anyone.</p>';
-    ['m-count','m-duration','m-energy','m-productivity'].forEach(id => document.getElementById(id).textContent = '—');
+      return true;
+    }
+    return false;
   }
+
+  // Try plain fetch first (works if CORS is open on the script)
+  try {
+    const res = await fetch(API + '?_=' + Date.now());
+    const data = await res.json();
+    if (processData(data)) return;
+  } catch(e) {}
+
+  // Fall back to JSONP
+  try {
+    const data = await jsonp(API);
+    if (processData(data)) return;
+  } catch(e) {}
+
+  dot.style.background = '#EE352E'; statusText.textContent = 'Connection error';
+  document.getElementById('log-body').innerHTML = '<p class="empty">Could not reach Google Sheet. Make sure script is deployed with access set to Anyone.</p>';
+  ['m-count','m-duration','m-energy','m-productivity'].forEach(id => document.getElementById(id).textContent = '\u2014');
 }
 
 function avg(arr) { return arr.length ? arr.reduce((a,b) => a+b,0) / arr.length : 0; }

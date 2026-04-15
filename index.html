@@ -300,6 +300,14 @@ input:focus { outline: none; border-color: #fccc0a; }
   </div>
 
   <div class="card">
+    <p class="section-label">Avg energy by day of week</p>
+    <p style="font-size:12px;color:#4a7a9b;margin:-4px 0 12px;">Which days does the cohort arrive most ready to learn?</p>
+    <div style="position:relative;width:100%;height:260px;">
+      <canvas id="dayChart" role="img" aria-label="Bar chart showing average energy by day of week"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <p class="section-label" style="margin:0;">Log history</p>
       <button class="refresh-btn" onclick="loadData()">Refresh</button>
@@ -500,6 +508,53 @@ function render() {
       scales: {
         y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#4a7a9b', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: '#1e3448' } },
         x: { ticks: { color: '#c8daea', font: { size: 12, weight: '700' } }, grid: { display: false }, border: { color: '#1e3448' } }
+      }
+    }
+  });
+
+  const dayOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const dayMap = {
+    'Apr 14': 'Mon', 'Apr 15': 'Tue', 'Apr 16': 'Wed', 'Apr 17': 'Thu',
+    'Apr 18': 'Fri', 'Apr 19': 'Sat', 'Apr 20': 'Sun',
+    'Apr 21': 'Mon', 'Apr 22': 'Tue', 'Apr 23': 'Wed', 'Apr 24': 'Thu',
+    'Apr 25': 'Fri', 'Apr 26': 'Sat', 'Apr 27': 'Sun',
+    'Apr 7': 'Mon', 'Apr 8': 'Tue', 'Apr 9': 'Wed', 'Apr 10': 'Thu',
+    'Apr 11': 'Fri', 'Apr 12': 'Sat', 'Apr 13': 'Sun',
+    'Sun Apr 12 2026': 'Sat', 'Mon Apr 13 2026': 'Sun', 'Tue Apr 14 2026': 'Mon'
+  };
+  const dayEnergy = {};
+  entries.forEach(e => {
+    const dateStr = String(e.date).trim();
+    let day = dayMap[dateStr];
+    if (!day) {
+      const d = new Date(dateStr);
+      if (!isNaN(d)) {
+        day = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+      }
+    }
+    if (day) {
+      if (!dayEnergy[day]) dayEnergy[day] = [];
+      dayEnergy[day].push(Number(e.energy));
+    }
+  });
+  const availDays = dayOrder.filter(d => dayEnergy[d] && dayEnergy[d].length > 0);
+  const dayAvgs = availDays.map(d => parseFloat(avg(dayEnergy[d]).toFixed(1)));
+  const dayColors = availDays.map(d => {
+    const a = avg(dayEnergy[d]);
+    if (a >= 4) return '#1D9E75';
+    if (a >= 3) return '#378ADD';
+    return '#EE352E';
+  });
+  if (window.dayChart) window.dayChart.destroy();
+  window.dayChart = new Chart(document.getElementById('dayChart'), {
+    type: 'bar',
+    data: { labels: availDays, datasets: [{ label: 'Avg energy', data: dayAvgs, backgroundColor: dayColors, borderRadius: 8, borderSkipped: false }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#4a7a9b', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: '#1e3448' } },
+        x: { ticks: { color: '#c8daea', font: { size: 14, weight: '700' } }, grid: { display: false }, border: { color: '#1e3448' } }
       }
     }
   });

@@ -590,10 +590,6 @@ function render() {
       }
     }
   });
-}
-
-loadData();
-
 
 let aiHistory = [];
 let userName = '';
@@ -704,7 +700,7 @@ async function sendAI() {
   }
   sendBtn.disabled = false;
 }
-
+loadData();
 </script>
 
 <div class="ai-overlay" id="ai-overlay" onclick="closeAI()"></div>

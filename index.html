@@ -431,8 +431,7 @@ async function loadData() {
         mode: e.mode === 'Citibike' ? 'Citibike/Bike' : e.mode === 'Car' ? 'Car/Rideshare' : e.mode
       }));
       dot.style.background = '#1D9E75';
-      statusText.textContent = 'Live — ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
-      render();
+      statusText.textContent = 'Live — ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');;
       return true;
     }
     return false;
@@ -459,50 +458,56 @@ async function loadData() {
 function avg(arr) { return arr.length ? arr.reduce((a,b) => a+b,0) / arr.length : 0; }
 
 function render() {
-  const count = entries.length;
-  document.getElementById('m-count').textContent = count || '0';
-  document.getElementById('m-duration').textContent = count ? Math.round(avg(entries.map(e => Number(e.duration)))) : '—';
-  document.getElementById('m-energy').textContent = count ? avg(entries.map(e => Number(e.energy))).toFixed(1) : '—';
-  document.getElementById('m-productivity').textContent = count ? avg(entries.map(e => Number(e.productivity))).toFixed(1) : '—';
-
-  const card = document.getElementById('insight-card');
-  if (count >= 3) {
-    const short = entries.filter(e => Number(e.duration) <= 20);
-    const long = entries.filter(e => Number(e.duration) > 20);
-    if (short.length && long.length) {
-      const sE = avg(short.map(e => Number(e.energy))).toFixed(1);
-      const lE = avg(long.map(e => Number(e.energy))).toFixed(1);
-      const sP = avg(short.map(e => Number(e.productivity))).toFixed(1);
-      const lP = avg(long.map(e => Number(e.productivity))).toFixed(1);
-      const better = parseFloat(sE) >= parseFloat(lE) ? 'shorter' : 'longer';
-      document.getElementById('insight-text').textContent = 'Commutes under 20 min average ' + sE + '/5 energy and ' + sP + '/5 productivity. Commutes over 20 min average ' + lE + '/5 energy and ' + lP + '/5 productivity. ' + better.charAt(0).toUpperCase() + better.slice(1) + ' commutes are leaving learners more energized.';
-      card.style.display = 'block';
-    } else { card.style.display = 'none'; }
-  } else { card.style.display = 'none'; }
-
-  const body = document.getElementById('log-body');
-  if (!count) {
-    body.innerHTML = '<p class="empty">No entries yet — be the first to log your commute to Pursuit.</p>';
-  } else {
-    body.innerHTML = [...entries].reverse().map(e => {
-      const color = modeColors[e.mode] || '#534AB7';
-      const icon = modeIcons[e.mode] || '🚌';
-      return '<div class="log-entry">' +
-        '<div class="log-entry-top">' +
-          '<span class="log-entry-name">' + e.name + '</span>' +
-          '<span class="log-entry-date">' + e.date + '</span>' +
-        '</div>' +
-        '<div class="log-entry-bottom">' +
-          '<span class="mode-badge" style="background:' + color + ';">' + icon + ' ' + e.mode + '</span>' +
-          '<span class="log-entry-duration">' + e.duration + ' min</span>' +
-          '<div class="log-entry-ratings">' +
-            '<span>Energy ' + e.energy + '/5</span>' +
-            '<span>Prod. ' + e.productivity + '/5</span>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    }).join('');
+  // 1. Check if we actually have data. If entries is empty, don't wipe the screen.
+  if (!entries || entries.length === 0) {
+    console.log("No data to render yet...");
+    return; 
   }
+
+  const count = entries.length;
+  document.getElementById('m-count').textContent = count;
+  
+  // 2. Wrap the math in Number() to ensure it doesn't break
+  const avgDur = avg(entries.map(e => Number(e.duration)));
+  document.getElementById('m-duration').textContent = Math.round(avgDur) || '—';
+  
+  // 3. Update the Log History List
+  const body = document.getElementById('log-body');
+  if (body) {
+    body.innerHTML = [...entries].reverse().map(e => `
+      <div class="log-entry">
+        <div class="log-entry-top">
+          <span class="log-entry-name">${e.name}</span>
+          <span class="log-entry-date">${e.date || ''}</span>
+        </div>
+        <div class="log-entry-bottom">
+          <span class="mode-badge">${e.mode}</span>
+          <span class="log-entry-duration">${e.duration} min</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 4. CHART PROTECTION
+  // We destroy the old chart ONLY if we are about to draw a new one with real data
+  const ctx = document.getElementById('trendChart');
+  if (ctx) {
+    if (trendChart) trendChart.destroy();
+    trendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: entries.map(e => e.name),
+        datasets: [{
+          label: 'Energy',
+          data: entries.map(e => Number(e.energy)),
+          borderColor: '#1D9E75',
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+}
 
   const labels = entries.map((e,i) => e.name + ' #' + (i+1));
   if (trendChart) trendChart.destroy();

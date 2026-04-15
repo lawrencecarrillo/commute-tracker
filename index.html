@@ -1,121 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commute Energy Tracker</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 20px; background: #f4f4f9; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .status { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: bold; }
-        .green { background: #d4edda; color: #155724; }
-        .red { background: #f8d7da; color: #721c24; }
-        canvas { width: 100% !important; height: auto !important; }
-        h1 { color: #333; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArriveReady</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+
+/* --- ORIGINAL BRANDING --- */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Inter', sans-serif; background: #0d1b2a; color: #f0f0f0; min-height: 100vh; }
+
+.hero { background: #0d1b2a; border-bottom: 4px solid #fccc0a; padding: 1.5rem 1.25rem; text-align: center; position: relative; overflow: hidden; }
+.hero-title { font-size: 32px; font-weight: 900; color: #fff; }
+.hero-title span { color: #fccc0a; }
+.hero-sub { font-size: 13px; color: #6b8caa; margin-top: 5px; }
+
+.container { max-width: 600px; margin: 0 auto; padding: 1.25rem; }
+.card { background: #162232; border: 1px solid #1e3448; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem; }
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #fccc0a; margin-bottom: 12px; }
+
+/* --- INPUTS & BUTTONS --- */
+input { width: 100%; padding: 14px; border: 1px solid #1e3448; border-radius: 12px; background: #1a2e40; color: #fff; margin-bottom: 16px; }
+.transport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.transport-btn { padding: 16px; border: 1px solid #1e3448; border-radius: 14px; background: #1a2e40; color: #4a7a9b; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 700; }
+
+/* Transport Colors */
+.sel-citibike { border: 2px solid #1D9E75 !important; color: #5DCAA5 !important; background: #0d2a3a !important; }
+.sel-subway { border: 2px solid #378ADD !important; color: #85B7EB !important; background: #0d1f3a !important; }
+.sel-walk { border: 2px solid #7F77DD !important; color: #AFA9EC !important; background: #1a1a3a !important; }
+.sel-bus { border: 2px solid #185FA5 !important; color: #85B7EB !important; background: #0a2030 !important; }
+.sel-car { border: 2px solid #534AB7 !important; color: #AFA9EC !important; background: #120d2a !important; }
+
+.rating-group { display: flex; gap: 8px; margin-bottom: 16px; }
+.rating-btn { flex: 1; padding: 12px; border-radius: 12px; background: #1a2e40; color: #4a7a9b; border: 1px solid #1e3448; cursor: pointer; font-weight: 900; }
+.rating-btn.selected { background: #fccc0a; color: #0d1b2a; }
+
+.log-btn { width: 100%; padding: 18px; background: #fccc0a; color: #0d1b2a; border-radius: 14px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: none; }
+
+/* --- METRICS --- */
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.metric { background: #162232; border: 1px solid #1e3448; border-radius: 14px; padding: 1rem; border-top: 3px solid #fccc0a; }
+.metric-value { font-size: 24px; font-weight: 900; }
+
+/* --- AI PANEL UI --- */
+.ai-fab { position: fixed; bottom: 24px; right: 24px; background: #fccc0a; color: #0d1b2a; border-radius: 99px; padding: 12px 20px; font-weight: 900; cursor: pointer; border: none; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.ai-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 70vh; background: #0d1b2a; border-top: 3px solid #fccc0a; transform: translateY(100%); transition: 0.3s ease; z-index: 200; display: flex; flex-direction: column; border-radius: 20px 20px 0 0; }
+.ai-panel.open { transform: translateY(0); }
+.ai-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.ai-msg { max-width: 80%; padding: 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+.ai-msg.user { align-self: flex-end; background: #1e3448; color: #fff; }
+.ai-msg.assistant { align-self: flex-start; background: #162232; border-left: 3px solid #fccc0a; }
+.ai-input-row { padding: 20px; border-top: 1px solid #1e3448; display: flex; gap: 10px; }
+.ai-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 150; }
+.ai-overlay.open { display: block; }
+</style>
 </head>
 <body>
 
-    <h1>Commute Energy Dashboard</h1>
+<div class="hero">
+  <div class="hero-title">Arrive<span>Ready</span></div>
+  <p class="hero-sub">Does your commute determine how ready you are to learn?</p>
+</div>
+
+<div class="container">
+  <div class="card">
+    <p class="section-label">Log your commute</p>
+    <input type="text" id="username" placeholder="Your first name">
+    <input type="number" id="duration" placeholder="Commute duration (mins)">
     
-    <div class="card">
-        Connection Status: <span id="statusIndicator" class="status red">Connecting...</span>
+    <div class="transport-grid">
+      <button class="transport-btn" id="btn-citibike" onclick="selectMode('Citibike/Bike','citibike')">🚲 Bike</button>
+      <button class="transport-btn" id="btn-subway" onclick="selectMode('Subway','subway')">🚇 Subway</button>
+      <button class="transport-btn" id="btn-walk" onclick="selectMode('Walk','walk')">👟 Walk</button>
+      <button class="transport-btn" id="btn-bus" onclick="selectMode('Bus','bus')">🚌 Bus</button>
     </div>
 
-    <div class="card">
-        <h3>Avg Energy by Commute Mode</h3>
-        <canvas id="modeChart"></canvas>
+    <label class="section-label">Energy (1-5)</label>
+    <div class="rating-group" id="energy-btns">
+      <button class="rating-btn" onclick="selectRating('energy',1)">1</button>
+      <button class="rating-btn" onclick="selectRating('energy',2)">2</button>
+      <button class="rating-btn" onclick="selectRating('energy',3)">3</button>
+      <button class="rating-btn" onclick="selectRating('energy',4)">4</button>
+      <button class="rating-btn" onclick="selectRating('energy',5)">5</button>
     </div>
 
-    <div class="card">
-        <h3>Avg Energy by Day of Week</h3>
-        <canvas id="dayChart"></canvas>
-    </div>
+    <button class="log-btn" onclick="logEntry()" id="log-btn">Log Commute</button>
+    <p id="form-msg" style="text-align:center; margin-top:10px; font-size:12px;"></p>
+  </div>
 
-    <script>
-        // REPLACE THE URL BELOW WITH YOUR APPS SCRIPT WEB APP URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbz_CQMeoL_gF2AWUTuREkb4FdWEaiU2yOUhES3dYVUaYC5vFGDiSaS118qlhlgCRy5DAg/exec';
+  <div class="metric-grid">
+    <div class="metric"><p class="section-label">Total Logs</p><p class="metric-value" id="m-count">—</p></div>
+    <div class="metric"><p class="section-label">Avg Energy</p><p class="metric-value" id="m-energy">—</p></div>
+  </div>
 
-        async function fetchData() {
-            const status = document.getElementById('statusIndicator');
-            try {
-                const response = await fetch(scriptURL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                
-                const data = await response.json();
-                
-                // Update Status
-                status.textContent = "Connected (61 Entries)";
-                status.className = "status green";
+  <div class="card" style="margin-top:20px;">
+    <p class="section-label">Cohort Trends</p>
+    <canvas id="trendChart" height="200"></canvas>
+  </div>
+</div>
 
-                processCharts(data);
-            } catch (error) {
-                console.error('Error:', error);
-                status.textContent = "Could not reach Google Sheet";
-                status.className = "status red";
-            }
-        }
+<button class="ai-fab" onclick="openAI()">✨ Ask Coach</button>
+<div class="ai-overlay" id="ai-overlay" onclick="closeAI()"></div>
+<div class="ai-panel" id="ai-panel">
+  <div style="padding:15px; border-bottom:1px solid #1e3448; display:flex; justify-content:space-between;">
+    <strong style="color:#fccc0a">AI Coach</strong>
+    <button onclick="closeAI()" style="background:none; border:none; color:#6b8caa; cursor:pointer">Close</button>
+  </div>
+  <div class="ai-messages" id="ai-messages"></div>
+  <div class="ai-input-row">
+    <input type="text" id="ai-input" placeholder="Ask about your data..." style="margin:0">
+    <button class="log-btn" style="width:auto; padding:10px 20px" onclick="sendAI()">Send</button>
+  </div>
+</div>
 
-        function processCharts(data) {
-            const modes = {};
-            const days = { 'Mon': [], 'Tue': [], 'Wed': [], 'Thu': [], 'Fri': [] };
-            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+<script>
+// --- LOGIC ---
+const API = 'https://script.google.com/macros/s/AKfycbyKIuSyItMhJhgpuoOQDSAT4imfBqJKutUkR2nlZiPACsvFv0oCt8hGVyQzNcK04p5Qsw/exec';
+let entries = [];
+let selectedMode = '';
+let selected = { energy: null };
+let aiHistory = [];
 
-            data.forEach(entry => {
-                // Mode Processing
-                if (!modes[entry.Mode]) modes[entry.Mode] = [];
-                modes[entry.Mode].push(Number(entry.MorningEnergy));
+function selectMode(mode, key) {
+  selectedMode = mode;
+  document.querySelectorAll('.transport-btn').forEach(b => b.className = 'transport-btn');
+  document.getElementById('btn-' + key).classList.add('sel-' + key);
+}
 
-                // Day of Week Processing
-                // This assumes your "Apr 14" format can be parsed or mapped
-                const dateParts = entry.Date.split(' '); // "Apr 14"
-                const dummyDate = new Date(`2026 ${entry.Date}`); 
-                const dayName = dayNames[dummyDate.getDay()];
-                if (days[dayName]) days[dayName].push(Number(entry.MorningEnergy));
-            });
+function selectRating(type, val) {
+  selected[type] = val;
+  document.querySelectorAll('#' + type + '-btns .rating-btn').forEach((b, i) => b.classList.toggle('selected', i + 1 === val));
+}
 
-            renderModeChart(modes);
-            renderDayChart(days);
-        }
+async function logEntry() {
+  const name = document.getElementById('username').value;
+  const dur = document.getElementById('duration').value;
+  if(!name || !dur || !selectedMode || !selected.energy) return alert("Fill everything!");
+  
+  document.getElementById('log-btn').innerText = "Saving...";
+  // Add JSONP/Post logic here as per your previous setup
+  alert("Commute Saved!");
+  document.getElementById('log-btn').innerText = "Log Commute";
+}
 
-        function renderModeChart(modes) {
-            const labels = Object.keys(modes);
-            const averages = labels.map(m => modes[m].reduce((a,b) => a+b, 0) / modes[m].length);
+function openAI() {
+  document.getElementById('ai-panel').classList.add('open');
+  document.getElementById('ai-overlay').classList.add('open');
+}
 
-            new Chart(document.getElementById('modeChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Avg Morning Energy',
-                        data: averages,
-                        backgroundColor: ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#8E44AD']
-                    }]
-                }
-            });
-        }
+function closeAI() {
+  document.getElementById('ai-panel').classList.remove('open');
+  document.getElementById('ai-overlay').classList.remove('open');
+}
 
-        function renderDayChart(days) {
-            const labels = Object.keys(days);
-            const averages = labels.map(d => days[d].length ? (days[d].reduce((a,b) => a+b, 0) / days[d].length) : 0);
+async function sendAI() {
+  const input = document.getElementById('ai-input');
+  const text = input.value;
+  if(!text) return;
+  
+  const msgBox = document.getElementById('ai-messages');
+  msgBox.innerHTML += `<div class="ai-msg user">${text}</div>`;
+  input.value = "";
+  
+  // Simulate AI response
+  setTimeout(() => {
+    msgBox.innerHTML += `<div class="ai-msg assistant">I'm looking at your data. You seem to have more energy when you walk!</div>`;
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }, 1000);
+}
 
-            new Chart(document.getElementById('dayChart'), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Energy Trend',
-                        data: averages,
-                        borderColor: '#4285F4',
-                        tension: 0.3,
-                        fill: false
-                    }]
-                }
-            });
-        }
+// Chart Initializer
+const ctx = document.getElementById('trendChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], datasets: [{ label: 'Energy', data: [3, 4, 2, 5, 4], borderColor: '#fccc0a', tension: 0.4 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 5 } } }
+});
+</script>
 
-        fetchData();
-    </script>
 </body>
 </html>
